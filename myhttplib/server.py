@@ -28,23 +28,29 @@ class Server:
                 events = self._epoll.poll(1)
                 for fileno, event in events:
                     if fileno == self._socket.fileno():
-                        connection, address = self._socket.accept()
-                        connection.setblocking(0)
+                        try:
+                            connection, address = self._socket.accept()
+                            connection.setblocking(0)
 
-                        handler = connection.fileno()
-                        self._epoll.register(handler, select.EPOLLIN)
-                        self._connections[handler] = connection
+                            handler = connection.fileno()
+                            self._epoll.register(handler, select.EPOLLIN)
+                            self._connections[handler] = connection
 
-                        self._requests[handler] = Request()
-                        self._responses[handler] = Responce()
+                            self._requests[handler] = Request()
+                            self._responses[handler] = Responce()
+                        except socket.error:
+                            pass
 
                     elif event & select.EPOLLIN:
-                        conn = self._connections[fileno]
-                        done = self._requests[fileno].recieve(conn)
-                        if done:
-                            self._epoll.modify(fileno, select.EPOLLOUT)
-                            request = self._requests[fileno]
-                            self._responses[fileno].build(request)
+                        try:
+                            conn = self._connections[fileno]
+                            done = self._requests[fileno].recieve(conn)
+                            if done:
+                                self._epoll.modify(fileno, select.EPOLLOUT)
+                                request = self._requests[fileno]
+                                self._responses[fileno].build(request)
+                        except socket.error:
+                            pass
 
                     elif event & select.EPOLLOUT:
                         try:

@@ -10,7 +10,7 @@ COPY myhttplib /app/myhttplib
 COPY requirements.txt /app
 COPY setup.py /app
 COPY main.py /app
-COPY httptest /var/www/html
+COPY httptest /var/www/html/httptest
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
