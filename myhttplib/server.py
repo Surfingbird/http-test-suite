@@ -59,12 +59,17 @@ class Server:
                             if done:
                                 self._epoll.modify(fileno, 0)
                                 self._connections[fileno].shutdown(socket.SHUT_RDWR)
+                                if self._responses[fileno]._file is not None:
+                                    self._responses[fileno]._file.close()
+                                    self._responses[fileno]._file = None
                         except socket.error:
                             pass
 
                     elif event & select.EPOLLHUP:
                         self._epoll.unregister(fileno)
                         self._connections[fileno].close()
+                        del self._requests[fileno]
+                        del self._responses[fileno]
                         del self._connections[fileno]
 
         finally:
