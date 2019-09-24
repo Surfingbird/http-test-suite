@@ -48,6 +48,7 @@ class Server:
                             if done:
                                 self._epoll.modify(fileno, select.EPOLLOUT)
                                 request = self._requests[fileno]
+                                del self._requests[fileno]
                                 self._responses[fileno].build(request)
                         except socket.error:
                             pass
@@ -62,14 +63,13 @@ class Server:
                                 if self._responses[fileno]._file is not None:
                                     self._responses[fileno]._file.close()
                                     self._responses[fileno]._file = None
+                                    del self._responses[fileno]
                         except socket.error:
                             pass
 
                     elif event & select.EPOLLHUP:
                         self._epoll.unregister(fileno)
                         self._connections[fileno].close()
-                        del self._requests[fileno]
-                        del self._responses[fileno]
                         del self._connections[fileno]
 
         finally:
