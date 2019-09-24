@@ -6,6 +6,7 @@ from myhttplib.responce import Responce
 
 EOL1 = b'\n\n'
 EOL2 = b'\n\r\n'
+max_con = 50
 
 # TODO check file discriptor for reading
 class Server:
@@ -25,6 +26,7 @@ class Server:
     def run(self):
         try:
             while True:
+                print(len(self._connections), len(self._requests), len(self._responses))
                 events = self._epoll.poll(1)
                 for fileno, event in events:
                     if fileno == self._socket.fileno():
