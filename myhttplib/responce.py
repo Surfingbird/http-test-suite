@@ -8,7 +8,7 @@ from myhttplib.status import HTTPStatusOK, status_resolve, HTTPStatusNotFound
 from myhttplib.info import ConnectionHeader, close_field, ServerHeader, ServerName, DateHeader, http_version, NL, \
     contentheader, ContentLengthHeader, ContentTypeHeader, DefaultContentType, HEAD
 from myhttplib.status import ClientError
-from myhttplib.vars import ROOT_DIR, DEFAULT_FILE, CHUNCK_SIZE
+from myhttplib.vars import CHUNCK_SIZE, config
 
 
 class Responce:

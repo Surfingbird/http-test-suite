@@ -5,8 +5,12 @@ FROM python:3.7-slim
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-COPY server /app
+COPY httpd.conf /etc
+COPY myhttplib /app
 COPY requirements.txt /app
+COPY setup.py /app
+COPY main.py /app
+COPY httptest /var/www/html
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt

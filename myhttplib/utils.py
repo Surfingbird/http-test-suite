@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 from typing import Union
 
 from myhttplib.status import ForbiddenError, NotFoundError
-from myhttplib.vars import ROOT_DIR, DEFAULT_FILE
+from myhttplib.vars import config, DEFAULT_FILE
 
 
 def get_file_length():
@@ -40,7 +40,7 @@ def clear_path(raw_path: str) -> str:
         res = '/' + res
 
     if res[-1] == '/':
-        if os.path.isfile(ROOT_DIR + res):
+        if os.path.isfile(config.ROOT_DIR + res):
             is_dir = False
             raise NotFoundError('file with / simbol')
         else:
@@ -48,7 +48,7 @@ def clear_path(raw_path: str) -> str:
             is_index = True
             res = res + DEFAULT_FILE
 
-    res = ROOT_DIR + res
+    res = config.ROOT_DIR + res
 
     if not os.path.exists(res) and not is_dir:
         raise NotFoundError('--')
