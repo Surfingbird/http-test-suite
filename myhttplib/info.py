@@ -1,3 +1,8 @@
+ServerName = 'Surfingbird server'
+http_version = '1.1'
+
+NL = b'\r\n'
+
 html = '.html'
 css = '.css'
 js = '.js'
@@ -5,19 +10,25 @@ jpg = '.jpg'
 jpeg = '.jpeg'
 png = '.png'
 gif = '.gif'
-swf ='.swf'
+swf = '.swf'
+txt = '.txt'
 
 GET = 'GET'
-POST = 'POST'
 HEAD = 'HEAD'
 
 ServerHeader = 'Server'
+
 DateHeader = 'Date'
+
 ConnectionHeader = 'Connection'
-ContentLengthHeader = 'ContentLength'
-ContentTypeHeader = 'ContentType'
+close_field = 'close'
+
+ContentLengthHeader = 'Content-Length'
+
+ContentTypeHeader = 'Content-Type'
 
 contentheader = {
+    txt: 'text/plain',
     html: 'text/html',
     css: 'text/css',
     js: 'text/javascript',
@@ -27,6 +38,7 @@ contentheader = {
     gif: 'image/gif',
     swf: 'application/x-shockwave-flash',
 }
+DefaultContentType = contentheader[txt]
 
 valid_methods = {
     GET: True,

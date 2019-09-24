@@ -42,11 +42,13 @@ class Server:
                     if fileno == self._socket.fileno():
                         connection, address = self._socket.accept()
                         connection.setblocking(0)
-                        self._epoll.register(connection.fileno(), select.EPOLLIN)
-                        self._connections[connection.fileno()] = connection
 
-                        self._requests[connection.fileno()] = Request()
-                        self._responses[connection.fileno()] = Responce()
+                        handler = connection.fileno()
+                        self._epoll.register(handler, select.EPOLLIN)
+                        self._connections[handler] = connection
+
+                        self._requests[handler] = Request()
+                        self._responses[handler] = Responce()
 
                     elif event & select.EPOLLIN:
                         conn = self._connections[fileno]
@@ -57,11 +59,14 @@ class Server:
                             self._responses[fileno].build(request)
 
                     elif event & select.EPOLLOUT:
-                        conn = self._connections[fileno]
-                        done = self._responses[fileno].send(conn)
-                        if done:
-                            self._epoll.modify(fileno, 0)
-                            self._connections[fileno].shutdown(socket.SHUT_RDWR)
+                        try:
+                            conn = self._connections[fileno]
+                            done = self._responses[fileno].send(conn)
+                            if done:
+                                self._epoll.modify(fileno, 0)
+                                self._connections[fileno].shutdown(socket.SHUT_RDWR)
+                        except socket.error:
+                            pass
 
                     elif event & select.EPOLLHUP:
                         self._epoll.unregister(fileno)
