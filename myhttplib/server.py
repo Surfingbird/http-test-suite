@@ -11,21 +11,9 @@ EOL2 = b'\n\r\n'
 class Server:
     __slots__ = ['port', '_socket', '_epoll',
                  '_connections', '_requests', '_responses']
-    def __init__(self, port: int):
-        # self.port: int
-        # self._socket: socket.socket
-        # self._epoll: select.epoll
-        # self._connections: Dict[int, socket.socket]
-        # self._requests: Dict[int, Request]
-        # self._responses: Dict[int, Responce]
-
+    def __init__(self, port: int, _socket):
         self.port = port
-
-        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._socket.bind(('0.0.0.0', self.port))
-        self._socket.listen(1)
-        self._socket.setblocking(0)
+        self._socket = _socket
 
         self._epoll = select.epoll()
         self._epoll.register(self._socket.fileno(), select.EPOLLIN)
